@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Bluetooth_internship</string>
+    <string name="txt_btnScan">Scan</string>
+</resources>
