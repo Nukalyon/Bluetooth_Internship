@@ -36,10 +36,17 @@ class MainActivity : ComponentActivity() {
         bluetoothManager = getSystemService(BluetoothManager::class.java)
         bluetoothAdapter = bluetoothManager.adapter
 
+        val btnPermission = findViewById<Button>(R.id.btn_permission) as Button
+        btnPermission.setOnClickListener()
+        {
+            setup()
+        }
+
         val btnScan = findViewById<Button>(R.id.btn_scan) as Button
         btnScan.setOnClickListener()
         {
-            setup()
+            //Btn click
+            scanForDevices()
         }
     }
 
@@ -91,10 +98,22 @@ class MainActivity : ComponentActivity() {
         {
             //User accepted enabling
             Toast.makeText(applicationContext, "User accepted to enable Bluetooth", Toast.LENGTH_LONG)
+            btPermission = true;
         }
         else{
             //user denied enabling
             Toast.makeText(applicationContext, "User refused to enable Bluetooth", Toast.LENGTH_LONG)
         }
     }
+
+
+    private fun scanForDevices()
+    {
+        //First check if one of the bonded device is already known
+        var isDeviceKnow : Boolean = false
+        
+    }
 }
+
+
+
