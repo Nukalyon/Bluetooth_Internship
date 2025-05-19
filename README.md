@@ -6,3 +6,5 @@ This project aims to learn and use the bluetooth on android.
 - [ ] Scan
 - [ ] Display Devices found
 - [ ] Print info ?
+- [ ] Listen to Bluetooth states
+- [ ] Continuity of the app ?
