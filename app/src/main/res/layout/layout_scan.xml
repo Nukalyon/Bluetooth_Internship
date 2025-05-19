@@ -8,16 +8,16 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="95"
-        android:background="@color/purple_200">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="95">
 
         <LinearLayout
+            android:id="@+id/lstView_devicesFound"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/lstView_devicesFound"
-            android:orientation="vertical">
-        </LinearLayout>
+            android:orientation="vertical"/>
+
     </ScrollView>
 
     <LinearLayout
@@ -30,20 +30,16 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_permission"
-            android:text="@string/txt_btnPermission"
-            android:layout_gravity="center"
-            android:layout_weight="1"/>
+            android:id="@+id/btn_StartScan"
+            android:text="@string/txt_btnStartScan"
+            android:layout_gravity="center"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_scan"
-            android:text="@string/txt_btnStartScan"
-            android:layout_gravity="center"
-            android:layout_weight="1"/>
+            android:id="@+id/btn_StopScan"
+            android:text="@string/txt_btnStopScan"
+            android:layout_gravity="center"/>
 
     </LinearLayout>
-
-
 </LinearLayout>

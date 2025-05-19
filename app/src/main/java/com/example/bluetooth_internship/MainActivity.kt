@@ -1,32 +1,105 @@
 package com.example.bluetooth_internship
 
-import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import android.os.Build.VERSION
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresPermission
-import androidx.core.content.IntentCompat
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import com.example.bluetooth_internship.controller.AndroidBluetoothController
+import com.example.bluetooth_internship.ui.theme.Bluetooth_internshipTheme
+import com.example.bluetooth_internship.view.BluetoothScreen
+import com.example.bluetooth_internship.view.BluetoothView
 
 /***************************************
  *      REF:
  *      https://www.youtube.com/watch?v=_bMK5lwx-as
  ***************************************/
+//Bluetooth BLE to use ? low data transfert ?
 
 class MainActivity : ComponentActivity() {
 
+    var TIME_VISIBLE = 60
+    private val bluetoothManager by lazy {
+        applicationContext.getSystemService(BluetoothManager::class.java)
+    }
+    private val bluetoothAdapter by lazy {
+        bluetoothManager?.adapter
+    }
+    private val isBluetoothEnabled : Boolean
+        get() = bluetoothAdapter?.isEnabled == true
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val enableBluetoothLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ){ /* Not needed ?*/}
+
+        val makeDeviceVisible = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {/* */ }
+
+
+
+        val permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ){
+                perms ->
+            val canEnableBluetooth =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    perms[android.Manifest.permission.BLUETOOTH_CONNECT] == true
+                } else { true }
+            if(canEnableBluetooth && !isBluetoothEnabled){
+                enableBluetoothLauncher.launch(
+                    Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                )
+            }
+        }
+
+        //Make the device detectable to everyone for a periode of time
+        //if granted
+        val visibility = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+        visibility.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, TIME_VISIBLE)
+        makeDeviceVisible.launch(visibility)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            permissionLauncher.launch(
+                arrayOf(
+                    android.Manifest.permission.BLUETOOTH_SCAN,
+                    android.Manifest.permission.BLUETOOTH_CONNECT
+                )
+            )
+        }
+
+        setContent{
+            Bluetooth_internshipTheme {
+            }
+            Surface(
+                color = MaterialTheme.colorScheme.background
+            ){
+                val btController = AndroidBluetoothController(applicationContext)
+                val view = BluetoothView(btController)
+                val state = view.state.collectAsState()
+
+                BluetoothScreen(
+                    state = state,
+                    onStartScan = BluetoothView(btController)::startScan,
+                    onStopScan = view::stopScan
+                )
+            }
+        }
+    }
+
+    /*
     lateinit var bluetoothManager: BluetoothManager
     lateinit var bluetoothAdapter: BluetoothAdapter
     //Time duration of detectability of the device in seconds
@@ -165,7 +238,5 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
         unregisterReceiver(receiver)
     }
+    */
 }
-
-
-

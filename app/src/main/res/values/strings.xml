@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Bluetooth_internship</string>
-    <string name="txt_btnScan">Scan</string>
+    <string name="txt_btnStartScan">Start Scan</string>
+    <string name="txt_btnStopScan">Stop Scan</string>
     <string name="txt_btnPermission">Permission</string>
 </resources>
