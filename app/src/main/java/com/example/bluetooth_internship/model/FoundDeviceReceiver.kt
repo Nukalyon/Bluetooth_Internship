@@ -22,7 +22,7 @@ class FoundDeviceReceiver (
                     else{
                         intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
                     }
-                device?.let { onDeviceFound }
+                device?.let { onDeviceFound(it) }
             }
         }
     }

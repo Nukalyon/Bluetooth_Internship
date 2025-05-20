@@ -42,7 +42,6 @@ class AndroidBluetoothController(
         device -> _scannedDevices.update{
             devices ->
             val newDevice = device.toBluetoothDeviceDomain()
-            Log.d("DIM", "Device found with name = ${device.name}")
             if(newDevice in devices) devices else devices + newDevice
         }
     }
@@ -70,7 +69,6 @@ class AndroidBluetoothController(
             return
         }
         bluetoothAdapter?.cancelDiscovery()
-        context.unregisterReceiver(foundDeviceReceiver)
     }
 
     override fun release() {

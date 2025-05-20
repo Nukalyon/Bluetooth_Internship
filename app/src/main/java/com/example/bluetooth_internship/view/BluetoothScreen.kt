@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bluetooth_internship.model.BluetoothDevice
 
+
 @Composable
 fun BluetoothScreen(
     state: State<BluetoothUiState>,
@@ -26,8 +27,7 @@ fun BluetoothScreen(
     onStopScan: () -> Unit
 ) {
     Column (
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ){
         BluetoothDeviceList(
             pairedDevices = state.value.pairedDevices,
@@ -92,7 +92,7 @@ fun BluetoothDeviceList(
         items(scannedDevices){
                 device ->
             Text(
-                text = device.name ?: "(No name)",
+                text = device.name ?: device.address,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onClick(device) }

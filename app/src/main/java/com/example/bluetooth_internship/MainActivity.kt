@@ -1,15 +1,12 @@
 package com.example.bluetooth_internship
 
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -49,7 +46,6 @@ class MainActivity : ComponentActivity() {
         ) {/* */ }
 
 
-
         val permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ){
@@ -65,11 +61,13 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        /*
         //Make the device detectable to everyone for a periode of time
         //if granted
         val visibility = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
         visibility.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, TIME_VISIBLE)
         makeDeviceVisible.launch(visibility)
+        */
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             permissionLauncher.launch(
@@ -82,20 +80,21 @@ class MainActivity : ComponentActivity() {
 
         setContent{
             Bluetooth_internshipTheme {
-            }
-            Surface(
-                color = MaterialTheme.colorScheme.background
-            ){
                 val btController = AndroidBluetoothController(applicationContext)
                 val view = BluetoothView(btController)
                 val state = view.state.collectAsState()
 
-                BluetoothScreen(
-                    state = state,
-                    onStartScan = BluetoothView(btController)::startScan,
-                    onStopScan = view::stopScan
-                )
+                Surface(
+                    color = MaterialTheme.colorScheme.background
+                ){
+                    BluetoothScreen(
+                        state = state,
+                        onStartScan = view::startScan,
+                        onStopScan = view::stopScan
+                    )
+                }
             }
+
         }
     }
 

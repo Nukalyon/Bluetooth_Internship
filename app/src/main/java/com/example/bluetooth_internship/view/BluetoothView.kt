@@ -18,12 +18,15 @@ class BluetoothView (
         bluetoothController.pairedDevices,
         _state
     ){
+        //if any value changes
         scannedDevices, pairedDevices, state ->
         state.copy(
             scannedDevices = scannedDevices,
             pairedDevices = pairedDevices
         )
-    }.stateIn( viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
+    }
+        //convert all the StateFlow up to a simple State
+        .stateIn( viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
 
 
     fun startScan(){
