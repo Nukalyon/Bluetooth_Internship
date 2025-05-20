@@ -5,12 +5,23 @@ import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.gestures.snapping.SnapPosition
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import com.example.bluetooth_internship.controller.AndroidBluetoothController
 import com.example.bluetooth_internship.ui.theme.Bluetooth_internshipTheme
 import com.example.bluetooth_internship.view.BluetoothScreen
@@ -84,14 +95,50 @@ class MainActivity : ComponentActivity() {
                 val view = BluetoothView(btController)
                 val state = view.state.collectAsState()
 
+                LaunchedEffect(key1 = state.value.errorMessage) {
+                    state.value.errorMessage?.let { message ->
+                        Toast.makeText(
+                            applicationContext,
+                            message,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+                LaunchedEffect(key1 = state.value.isConnected) {
+                    if(state.value.isConnected)
+                    {
+                        Toast.makeText(
+                            applicationContext,
+                            "You're connected !",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ){
-                    BluetoothScreen(
-                        state = state,
-                        onStartScan = view::startScan,
-                        onStopScan = view::stopScan
-                    )
+                    when{
+                        state.value.isConnecting ->
+                        {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ){
+                                CircularProgressIndicator()
+                                Text(text = "Connecting ...")
+                            }
+                        }
+                        else ->
+                            BluetoothScreen(
+                                state = state,
+                                onStartScan = view::startScan,
+                                onStopScan = view::stopScan,
+                                onDeviceClick = view::connectToDevice,
+                                onStartServer = view::waitForIncomingConnections
+                            )
+                    }
                 }
             }
 

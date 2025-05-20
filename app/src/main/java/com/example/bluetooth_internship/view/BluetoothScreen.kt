@@ -24,7 +24,9 @@ import com.example.bluetooth_internship.model.BluetoothDevice
 fun BluetoothScreen(
     state: State<BluetoothUiState>,
     onStartScan: () -> Unit,
-    onStopScan: () -> Unit
+    onStopScan: () -> Unit,
+    onDeviceClick: (BluetoothDevice) -> Unit,
+    onStartServer: () -> Unit
 ) {
     Column (
         modifier = Modifier.fillMaxSize()
@@ -32,7 +34,7 @@ fun BluetoothScreen(
         BluetoothDeviceList(
             pairedDevices = state.value.pairedDevices,
             scannedDevices = state.value.scannedDevices,
-            onClick = { },
+            onClick = onDeviceClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
@@ -46,6 +48,9 @@ fun BluetoothScreen(
             }
             Button(onClick = onStopScan) {
                 Text(text = "Stop Scan")
+            }
+            Button(onClick = onStartServer) {
+                Text(text = "Start Server")
             }
         }
     }
