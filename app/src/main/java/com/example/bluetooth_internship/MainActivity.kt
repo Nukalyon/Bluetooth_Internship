@@ -95,6 +95,7 @@ class MainActivity : ComponentActivity() {
                 val view = BluetoothView(btController)
                 val state = view.state.collectAsState()
 
+                /*
                 LaunchedEffect(key1 = state.value.errorMessage) {
                     state.value.errorMessage?.let { message ->
                         Toast.makeText(
@@ -113,7 +114,7 @@ class MainActivity : ComponentActivity() {
                             Toast.LENGTH_LONG
                         ).show()
                     }
-                }
+                }*/
 
                 Surface(
                     color = MaterialTheme.colorScheme.background
@@ -130,7 +131,7 @@ class MainActivity : ComponentActivity() {
                                 Text(text = "Connecting ...")
                             }
                         }
-                        else ->
+                        else -> {
                             BluetoothScreen(
                                 state = state,
                                 onStartScan = view::startScan,
@@ -138,6 +139,7 @@ class MainActivity : ComponentActivity() {
                                 onDeviceClick = view::connectToDevice,
                                 onStartServer = view::waitForIncomingConnections
                             )
+                        }
                     }
                 }
             }
