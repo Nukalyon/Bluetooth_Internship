@@ -1,6 +1,7 @@
 package com.example.bluetooth_internship.view
 
 import com.example.bluetooth_internship.model.BluetoothDevice
+import com.example.bluetooth_internship.model.BluetoothMessage
 
 
 data class BluetoothUiState(
@@ -8,5 +9,8 @@ data class BluetoothUiState(
     val pairedDevices : List<BluetoothDevice> = emptyList(),
     val isConnected : Boolean = false,
     val isConnecting : Boolean = false,
-    val errorMessage : String? = null
+    val errorMessage : String? = null,
+
+
+    val messages: List<BluetoothMessage> = emptyList()
 )

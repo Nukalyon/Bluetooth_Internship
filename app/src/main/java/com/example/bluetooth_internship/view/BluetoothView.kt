@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class BluetoothView (
     private val bluetoothController : BluetoothController
@@ -30,7 +31,8 @@ class BluetoothView (
         scannedDevices, pairedDevices, state ->
         state.copy(
             scannedDevices = scannedDevices,
-            pairedDevices = pairedDevices
+            pairedDevices = pairedDevices,
+            messages = if(state.isConnected) state.messages else emptyList()
         )
     }
         //convert all the StateFlow up to a simple State
@@ -63,9 +65,21 @@ class BluetoothView (
         _state.update { it.copy( isConnecting = false, isConnected = false) }
     }
 
+
     fun waitForIncomingConnections(){
         _state.update { it.copy(isConnecting = true) }
         deviceConnectionJob = bluetoothController.startBluetoothServer().listen()
+    }
+
+    fun sendMessage(message : String){
+        viewModelScope.launch {
+            val bluetoothMessage = bluetoothController.trySendMessage(message)
+            if(bluetoothMessage != null){
+                _state.update { it.copy(
+                    messages = it.messages + bluetoothMessage
+                ) }
+            }
+        }
     }
 
     fun startScan(){
@@ -86,6 +100,11 @@ class BluetoothView (
                         isConnected = true,
                         isConnecting = false,
                         errorMessage = null
+                    ) }
+                }
+                is Connectionresult.TransferSucceeded ->{
+                    _state.update { it.copy(
+                        messages = it.messages + result.message
                     ) }
                 }
                 is Connectionresult.Error -> {
