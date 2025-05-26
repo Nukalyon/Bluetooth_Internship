@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Bluetooth_internship"
 include(":app")
+include(":app:plugin")
+include(":plugin")
