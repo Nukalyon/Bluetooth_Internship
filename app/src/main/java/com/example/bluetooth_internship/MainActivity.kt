@@ -20,7 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.bluetooth_internship.controller.AndroidBluetoothController
 import com.example.bluetooth_internship.ui.theme.Bluetooth_internshipTheme
-import com.example.bluetooth_internship.view.BluetoothScreen
+import com.example.bluetooth_internship.view.BluetoothScreenClient
+import com.example.bluetooth_internship.view.BluetoothScreenServer
 import com.example.bluetooth_internship.view.BluetoothView
 import com.example.bluetooth_internship.view.ChatScreen
 
@@ -136,13 +137,33 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         else -> {
-                            BluetoothScreen(
+                            when{
+                                state.value.isClient ->{
+                                    BluetoothScreenClient(
+                                        state = state,
+                                        onStartScan = view::startScan,
+                                        onStopScan = view::stopScan,
+                                        onDeviceClick = view::connectToDevice,
+                                        onChangeConfig = view::changeConfig
+                                    )
+                                }
+                                else ->{
+                                    BluetoothScreenServer (
+                                        onChangeConfig = view::changeConfig,
+                                        onStartServer = view::waitForIncomingConnections
+                                    )
+                                }
+                            }
+                            /*
+                            BluetoothScreenAdmin(
                                 state = state,
                                 onStartScan = view::startScan,
                                 onStopScan = view::stopScan,
                                 onDeviceClick = view::connectToDevice,
-                                onStartServer = view::waitForIncomingConnections
+                                onStartServer = view::waitForIncomingConnections,
+                                onChangeConfig = view::changeConfig
                             )
+                            */
                         }
                     }
                 }

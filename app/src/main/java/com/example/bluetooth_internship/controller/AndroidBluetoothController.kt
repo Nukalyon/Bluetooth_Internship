@@ -15,7 +15,6 @@ import com.example.bluetooth_internship.model.BluetoothDeviceDomain
 import com.example.bluetooth_internship.model.BluetoothMessage
 import com.example.bluetooth_internship.model.BluetoothStateReceiver
 import com.example.bluetooth_internship.model.FoundDeviceReceiver
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -179,6 +178,7 @@ class AndroidBluetoothController(
                     currentServerSocket?.accept()
                 } catch (e: IOException) {
                     // Sort de la boucle en cas d'erreur d'acceptation
+                    e.printStackTrace()
                     shouldLoop = false
                     null
                 }
@@ -245,6 +245,7 @@ class AndroidBluetoothController(
                     socket.close()
                     currentClientSocket = null
                     // Émet une erreur de connexion interrompue
+                    e.printStackTrace()
                     emit(Connectionresult.Error("Connection was interrupted"))
                 }
             }
@@ -279,7 +280,6 @@ class AndroidBluetoothController(
         )
         dataTransferService?.sendMessage(bluetoothMessage.toByteArray())
         return bluetoothMessage
-
     }
 
     // Libère les récepteurs et ferme la connexion Bluetooth

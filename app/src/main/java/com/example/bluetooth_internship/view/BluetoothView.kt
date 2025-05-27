@@ -1,5 +1,6 @@
 package com.example.bluetooth_internship.view
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bluetooth_internship.controller.BluetoothController
@@ -69,6 +70,12 @@ class BluetoothView (
     fun waitForIncomingConnections(){
         _state.update { it.copy(isConnecting = true) }
         deviceConnectionJob = bluetoothController.startBluetoothServer().listen()
+    }
+
+    fun changeConfig(res : Boolean){
+        //Log.i("INFO", "old state = ${state.value.isClient}")
+        _state.update { it.copy(isClient = res) }
+        //Log.i("INFO", "new state = ${state.value.isClient}")
     }
 
     fun sendMessage(message : String){

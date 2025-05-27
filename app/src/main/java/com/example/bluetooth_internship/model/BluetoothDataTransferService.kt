@@ -1,7 +1,6 @@
 package com.example.bluetooth_internship.model
 
 import android.bluetooth.BluetoothSocket
-import com.example.bluetooth_internship.controller.Connectionresult
 import com.example.bluetooth_internship.controller.toBluetoothMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +24,7 @@ class BluetoothDataTransferService(
                     socket.inputStream.read(buffer)
                 }
                 catch (e: IOException){
-                    throw TransferDataFailedException()
+                    throw TransferDataFailedException(e)
                 }
 
                 emit(
@@ -54,4 +53,4 @@ class BluetoothDataTransferService(
     }
 }
 
-class TransferDataFailedException : IOException("Reading incoming data failed")
+class TransferDataFailedException (exc : IOException): IOException("Reading incoming data failed\nDetails:\n${exc.printStackTrace()}")
