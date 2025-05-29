@@ -22,8 +22,10 @@ import com.example.bluetooth_internship.controller.AndroidBluetoothController
 import com.example.bluetooth_internship.ui.theme.Bluetooth_internshipTheme
 import com.example.bluetooth_internship.view.BluetoothScreenClient
 import com.example.bluetooth_internship.view.BluetoothScreenServer
+import com.example.bluetooth_internship.view.BluetoothUiState
 import com.example.bluetooth_internship.view.BluetoothView
-import com.example.bluetooth_internship.view.ChatScreen
+import com.example.bluetooth_internship.view.ClientConnectedScreen
+import com.example.bluetooth_internship.view.ServerConnectedScreen
 
 /***************************************
  *      REF:
@@ -130,11 +132,26 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         state.value.isConnected ->{
-                            ChatScreen(
+                            when{
+                                state.value.isClient ->{
+                                    ClientConnectedScreen(
+                                        onDisconnect = view::disconnectFromDevice,
+                                        onSendMessage = view::sendMessage
+                                    )
+                                }
+                                else -> {
+                                    ServerConnectedScreen(
+                                        state = state.value,
+                                        onDisconnect = view::disconnectFromDevice
+                                    )
+                                }
+                            }
+                            /*ChatScreen(
                                 state = state.value,
                                 onDisconnect = view::disconnectFromDevice,
                                 onSendMessage = view::sendMessage
                             )
+                            */
                         }
                         else -> {
                             when{
